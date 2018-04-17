@@ -1,9 +1,8 @@
 import unittest
 
-class Node:
+class Node(object):
 
 	def __init__(self, up, down, left, right, x, y, value=None):
-		
 		self.up = up
 		self.down = down
 		self.left = left
@@ -12,6 +11,19 @@ class Node:
 		self.y = y
 		self.value = value
 
+class Header(Node):
+
+	def __init__(self, up, down, left, right, primary):
+		super(Header, self).__init__(up, down, left, right, None, None)
+
+		self.is_primary = primary
+
+	def tally_ones(self):
+		current_node = self
+		self.value = 0
+		while type(current_node.down) is not Header:
+			current_node = current_node.down
+			self.value += current_node.value
 
 
 class UnitTest(unittest.TestCase):
