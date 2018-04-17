@@ -45,8 +45,55 @@ class Matrix:
 
 	def add_row(self, values):
 		if self.first_header is None:
-			self.first_header = Header(self, self, self, self, False)
+			self.first_header = Header(None, None, None, None, False)
 			current_header = self.first_header
+			for i in range(1, len(values)):
+				new_header = Header(None, None, current_header, self.first_header, False)
+				self.first_header.left = new_header
+				current_header.right = new_header
+				current_header = new_header
+
+		headers = self.get_number_of_headers()
+		if len(values) != headers:
+			raise ValueError("Invalid number of values for given number of rows. Matrix has "+str(headers)+" headers, but "+str(len(values))+" values were given.")
+
+		current_node = Node(self.first_header.up, self.first_header, None, None, self.total_rows, 0, values[0])
+		self.first_header.up = current_node
+		current_node.up.down = current_node
+
+		for i in range(1, len(values)):
+			new_node = Node(current_node.up.left, current_node.down.left, current_node, self.first_header.up, self.total_rows, i, values[i])
+
+			new_node.up.down = new_node
+			new_node.down.up = new_node
+			new_node.left.right = new_node
+			new_node.right.left = new_node
+
+			current_node = new_node
+
+		self.tally_all_ones()
+		self.total_rows += 1
+		array_to_add = []
+		for i in range(0, headers):
+			array_to_add.append(None)
+		self.removed_nodes.append(array_to_add)
+
+	def get_number_of_headers(self):
+		header = self.first_header.right
+		total = 1
+		while header is not self.first_header:
+			total += 1
+			header = header.right
+		return total
+
+	def tally_all_ones(self):
+		current_header = self.first_header
+		current_header.tally_ones()
+		current_header = current_header.right
+		while current_header is not self.first_header:
+			current_header.tally_ones()
+			current_header = current_header.right
+
 
 
 
@@ -65,8 +112,11 @@ class UnitTest(unittest.TestCase):
 		self.assertEqual(node.value, 5)
 
 	def test_circular_node_creation(self):
-		node = Node(None, None, None, None, None, None, 10)
+		node = Node(None, None, None, None, None, None, 0)
 		self.assertEqual(node.up, node)
+		self.assertEqual(node.down, node)
+		self.assertEqual(node.left, node)
+		self.assertEqual(node.right, node)
 
 
 
