@@ -98,7 +98,6 @@ class Matrix:
 
 		first = True
 		while first or (current_header is not self.first_header):
-			print(current_header.value)
 			first = False
 			current_header.tally_values()
 			current_header = current_header.right
@@ -194,15 +193,16 @@ class Matrix:
 		if current_node.y < self.first_header.down.y:
 			self.first_header = current_node.up
 
-		while type(current_node) is not Header:
-			print(current_node.value)
-
+		first = True
+		while first or (current_node is not first_node):
+			first = False
 			current_node.left.right = current_node
 			current_node.right.left = current_node
-			self.removed_nodes[current_node.x][current_node.y] = None
+			if type(current_node) is not Header:
+				self.removed_nodes[current_node.x][current_node.y] = None
 			current_node = current_node.down
-		self.restore_column_overlap(first_node.y)
 
+		self.restore_column_overlap(first_node.y)
 		self.tally_all_values()
 
 	def restore_column_overlap(self, index):
