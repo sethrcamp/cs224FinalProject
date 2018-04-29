@@ -3,7 +3,27 @@ import random
 
 class Node(object):
 
+
 	def __init__(self, up, down, left, right, x, y, value=None):
+		""" Creates a node that stores values and pointers to nodes adjacent to the node.
+
+				:param up:the pointer to the node above the current node
+				:param down:the pointer to the node below the current node
+				:param right:the pointer to the node to the right of the current node
+				:param left:the pointer to the node to the left of the current node
+				:param x:the indexed row number starting from the top of the matrix down
+				:param y:the indexed column number starting from the left of the matrix down
+				:param value:a numerical value stored by the node
+
+
+				:type up: node
+				:type down:node
+				:type left:node
+				:type right:node
+				:type x:int
+				:type y:int
+				:type value:int
+				"""
 
 		self.up = up
 		self.down = down
@@ -26,12 +46,29 @@ class Node(object):
 
 class Header(Node):
 
+
 	def __init__(self, up, down, left, right, primary):
+		""" Creates a subclass of node that stores values and pointers to nodes adjacent to that node and keeps track of the sum of the values of the nodes of the column.
+
+					:param up:the pointer to the node above the current node
+					:param down:the pointer to the node below the current node
+					:param right:the pointer to the node to the right of the current node
+					:param left:the pointer to the node to the left of the current node
+					:param primary:a boolean marking the column as primary or not primary.
+
+					:type up:node
+					:type down:node
+					:type left:node (header)
+					:type right:node (header)
+					:type primary:boolean
+
+					"""
 		super(Header, self).__init__(up, down, left, right, None, None)
 
 		self.is_primary = primary
 
 	def tally_values(self):
+		""" sets the instance variable self to the sum of the values in the column the header is in. """
 		current_node = self.down
 		self.value = 0
 
@@ -42,7 +79,15 @@ class Header(Node):
 
 class Matrix:
 
+
 	def __init__(self, values):
+		""" Creates a matrix with headers for each column and nodes for each entry in the matrix.
+
+						:param values:a two dimensional array where each element of the array is the value of the node at that position in the matrix
+						:type values: array
+
+						"""
+
 		self.removed_nodes = []
 		self.first_header = None
 		self.total_rows = 0
@@ -52,6 +97,12 @@ class Matrix:
 			self.add_row(row)
 
 	def add_row(self, values):
+		""" adds a row to the matrix and if no rows have been created it creates headers for the matrix .
+		:param values: an array containing the values for the nodes that are being created
+		:type values: array
+		"""
+
+
 		if self.first_header is None:
 			self.first_header = Header(None, None, None, None, False)
 			current_header = self.first_header
@@ -87,6 +138,11 @@ class Matrix:
 		self.removed_nodes.append(array_to_add)
 
 	def get_number_of_headers(self):
+		""" returns total number if headers.
+		:return: the number of headers in the matrix.
+		:rtype: int
+		"""
+
 		header = self.first_header.right
 		total = 1
 		while header is not self.first_header:
@@ -692,6 +748,9 @@ class UnitTest(unittest.TestCase):
 		matrix.restore_column(node_removed2)
 
 		self.assertEqual(matrix.get_array_representation(), [[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+
+
 
 def main():
 	unittest.main()
