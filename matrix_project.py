@@ -1,4 +1,5 @@
 import unittest
+import random
 
 class Node(object):
 
@@ -440,6 +441,18 @@ class UnitTest(unittest.TestCase):
 		self.assertEqual(node7.value, matrix.first_header.down.down.down.value)
 		self.assertEqual(node8.value, matrix.first_header.down.down.down.right.value)
 		self.assertEqual(node9.value, matrix.first_header.down.down.down.left.value)
+
+	def test_add_large_number_rows(self):
+		matrix = Matrix([])
+		numberOfRows = 500;
+		numberOfColumns = 500;
+
+		for x in range(0,numberOfRows):
+			row = []
+			for x in range(0, numberOfColumns):
+				row.append(random.randint(0,100))
+			matrix.add_row(row)
+		self.assertEqual(matrix.total_rows, numberOfRows)
 
 
 	def test_get_array_representation(self):
