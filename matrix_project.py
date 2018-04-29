@@ -137,8 +137,21 @@ class Matrix:
 		while first or (current_node is not first_node):
 			first = False
 
-			current_node.up.down = current_node
-			current_node.down.up = current_node
+			current_iterative_node = current_node.up
+			while current_iterative_node.up.down is not current_iterative_node:
+				current_iterative_node.down = current_node
+				current_iterative_node = current_iterative_node.up
+			current_iterative_node.down = current_node
+			current_node.up = current_iterative_node
+
+			current_iterative_node = current_node.down
+
+			while current_iterative_node.down.up is not current_iterative_node:
+				current_iterative_node.up = current_node
+				current_iterative_node = current_iterative_node.down
+			current_iterative_node.up = current_node
+			current_node.down = current_iterative_node
+
 			current_node = current_node.right
 			self.removed_nodes[current_node.x][current_node.y] = None
 
@@ -196,8 +209,22 @@ class Matrix:
 		first = True
 		while first or (current_node is not first_node):
 			first = False
-			current_node.left.right = current_node
-			current_node.right.left = current_node
+
+			current_iterative_node = current_node.left
+			while current_iterative_node.left.right is not current_iterative_node:
+				current_iterative_node.right = current_node
+				current_iterative_node = current_iterative_node.left
+			current_iterative_node.right = current_node
+			current_node.left = current_iterative_node
+
+			current_iterative_node = current_node.right
+
+			while current_iterative_node.right.left is not current_iterative_node:
+				current_iterative_node.left = current_node
+				current_iterative_node = current_iterative_node.right
+			current_iterative_node.left = current_node
+			current_node.right = current_iterative_node
+
 			if type(current_node) is not Header:
 				self.removed_nodes[current_node.x][current_node.y] = None
 			current_node = current_node.down
@@ -606,6 +633,20 @@ class UnitTest(unittest.TestCase):
 
 		self.assertEqual(matrix.get_array_representation(), [[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
+	def test_matrix_restore_multiple_columns_difficult_order(self):
+		matrix = Matrix([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15]])
+
+		node_removed = matrix.remove_column(1)
+		node_removed2 = matrix.remove_column(1)
+		node_removed3 = matrix.remove_column(1)
+		node_removed4 = matrix.remove_column(1)
+		matrix.restore_column(node_removed)
+		matrix.restore_column(node_removed3)
+		matrix.restore_column(node_removed4)
+		matrix.restore_column(node_removed2)
+
+		self.assertEqual(matrix.get_array_representation(), [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15]])
+
 	def test_matrix_remove_column_with_first_header_backtracking_header(self):
 
 		matrix = Matrix([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15]])
@@ -639,13 +680,8 @@ class UnitTest(unittest.TestCase):
 
 		self.assertEqual(matrix.get_array_representation(), [[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
-
-
-
-
 def main():
 	unittest.main()
-
 
 if __name__ == '__main__':
 	main()
