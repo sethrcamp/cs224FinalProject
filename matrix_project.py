@@ -45,6 +45,9 @@ class Node(object):
 
 
 class Header(Node):
+	"""The header is a subclass of node.
+	It also has functionality to keep track of the total value of all node in the given column
+	"""
 
 	def __init__(self, up, down, left, right, primary):
 		""" Creates a subclass of node that stores values and pointers to nodes adjacent to that node and keeps track of the sum of the values of the nodes of the column.
@@ -62,12 +65,14 @@ class Header(Node):
 		:type primary:boolean
 
 		"""
+
 		super(Header, self).__init__(up, down, left, right, None, None)
 
 		self.is_primary = primary
 
 	def tally_values(self):
-		""" sets the instance variable self to the sum of the values in the column the header is in. """
+		"""Sets the instance variable value to the sum of the values in the column the header is in. """
+
 		current_node = self.down
 		self.value = 0
 
@@ -77,6 +82,9 @@ class Header(Node):
 
 
 class Matrix:
+	"""The matrix class contains a reference to the first node in the entire structure.
+	In its entirety, the matrix structure is a circular, doubly-linked, 2D list.
+	"""
 
 	def __init__(self, values):
 		""" Creates a matrix with headers for each column and nodes for each entry in the matrix.
@@ -152,6 +160,7 @@ class Matrix:
 
 	def tally_all_values(self):
 		"""loops through every header node and then sets the tally_values function on them"""
+
 		current_header = self.first_header
 
 		first = True
@@ -162,12 +171,14 @@ class Matrix:
 
 	def remove_row(self, index):
 		"""removes a row at a specified index and returns the first node of the row that was removed
-						:param index: the position in the matrix at which the row resides
-						:type index: int
 
-						:return: returns the first node in the row.
-						:rtype: node
+		:param index: the position in the matrix at which the row resides
+		:type index: int
+
+		:return: returns the first node in the row.
+		:rtype: node
 		"""
+
 		self.remove_row_overlap(index)
 
 		current_node = self.first_header
@@ -190,11 +201,12 @@ class Matrix:
 
 	def remove_row_overlap(self, index):
 		"""if you are removing a row that overlaps a column it will remove that node
-			that had already been removed along with the other nodes in the row.
+		that had already been removed along with the other nodes in the row.
 
-						:param index:the position in the matrix at which the row resides
-						:type index:int
-					"""
+		:param index:the position in the matrix at which the row resides
+		:type index:int
+		"""
+
 		for i in range(0, len(self.removed_nodes[index])):
 			current_node = self.removed_nodes[index][i]
 			if current_node is not None:
@@ -202,10 +214,12 @@ class Matrix:
 				current_node.down.up = current_node.up
 
 	def restore_row(self, first_node):
-		"""restores a that has been removed by taking its
-								:param first_node:the first node in the row that was deleted.
-								:type first_node:node
-							"""
+		"""restores a row that has been removed by restoring all pointers for each node in the row
+
+		:param first_node: the first node in the row that was deleted.
+		:type first_node: node
+		"""
+
 		current_node = first_node
 
 		first = True
@@ -235,9 +249,11 @@ class Matrix:
 
 	def restore_row_overlap(self, index):
 		"""restores a row and if a node has been removed as a result of a column removal it will restore that node as well
-								:param index:the position in the matrix at which the row resides
-								:type index:int
-							"""
+
+		:param index: the position in the matrix at which the row resides
+		:type index: int
+		"""
+
 		for i in range(0, len(self.removed_nodes[index])):
 			current_node = self.removed_nodes[index][i]
 			if current_node is not None:
@@ -246,9 +262,10 @@ class Matrix:
 
 	def remove_column(self, index):
 		"""removes a column at a specified index.
-										:param index:the position in the matrix at which the row resides
-										:type index:int
-									"""
+
+		:param index: the position in the matrix at which the row resides
+		:type index: int
+		"""
 		self.remove_column_overlap(index)
 
 		current_node = self.first_header
@@ -279,9 +296,10 @@ class Matrix:
 	def remove_column_overlap(self, index):
 		"""removes a column and if a node has been removed as a result of a row removal it will remove that node as well as the
 		other nodes in that row.
-										:param index:the position in the matrix at which the row resides
-										:type index:int
-									"""
+
+		:param index:the position in the matrix at which the row resides
+		:type index:int
+		"""
 
 		for i in range(0, len(self.removed_nodes)):
 			current_node = self.removed_nodes[i][index]
@@ -291,9 +309,11 @@ class Matrix:
 
 	def restore_column(self, first_node):
 		"""restores a column
-										:param first_node:the node in the first position of the column that was deleted.
-										:type first_node:node
-									"""
+
+		:param first_node:the node in the first position of the column that was deleted.
+		:type first_node:node
+		"""
+
 		current_node = first_node
 
 		if current_node.y < self.first_header.down.y:
@@ -328,9 +348,11 @@ class Matrix:
 	def restore_column_overlap(self, index):
 		"""restores a column and if a node has been added as a result of a row addition it will exclude that node rather than
 		add it twice
-										:param index:the position in the matrix at which the row resides
-										:type index:int
-									"""
+
+		:param index:the position in the matrix at which the row resides
+		:type index:int
+		"""
+
 		for i in range(0, len(self.removed_nodes)):
 			current_node = self.removed_nodes[i][index]
 			if current_node is not None:
@@ -340,6 +362,7 @@ class Matrix:
 	def get_array_representation(self):
 		"""returns the array representation of the matrix by traversing the rows left to right and appending each
 		nodes value to an array."""
+
 		if self.zero_columns:
 			return []
 		array = []
@@ -541,18 +564,20 @@ class UnitTest(unittest.TestCase):
 		self.assertEqual(node8.value, matrix.first_header.down.down.down.right.value)
 		self.assertEqual(node9.value, matrix.first_header.down.down.down.left.value)
 
-	# def test_add_large_number_rows(self):
-	# 	matrix = Matrix([])
-	# 	numberOfRows = 500;
-	# 	numberOfColumns = 500;
-	#
-	# 	for x in range(0,numberOfRows):
-	# 		row = []
-	# 		for x in range(0, numberOfColumns):
-	# 			row.append(random.randint(0,100))
-	# 		matrix.add_row(row)
-	# 	self.assertEqual(matrix.total_rows, numberOfRows)
+	def test_add_large_number_rows(self):
+		print("-----THIS TEST TAKES ABOUT 30 SECONDS TO COMPLETE-----")
+		print("-----TO SKIP THIS TEST, COMMENT OUT LINES 567-580-----")
+		matrix = Matrix([])
+		numberOfRows = 500
+		numberOfColumns = 500
 
+		for x in range(0,numberOfRows):
+			row = []
+			for x in range(0, numberOfColumns):
+				row.append(random.randint(0,100))
+			matrix.add_row(row)
+		print("-----LONG TEST COMPLETE-----")
+		self.assertEqual(matrix.total_rows, numberOfRows)
 
 	def test_get_array_representation(self):
 		matrix = Matrix([])
