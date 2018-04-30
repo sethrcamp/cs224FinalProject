@@ -151,6 +151,7 @@ class Matrix:
 		return total
 
 	def tally_all_values(self):
+		"""loops through every header node and then sets the tally_values function on them"""
 		current_header = self.first_header
 
 		first = True
@@ -160,6 +161,13 @@ class Matrix:
 			current_header = current_header.right
 
 	def remove_row(self, index):
+		"""removes a row at a specified index and returns the first node of the row that was removed
+						:param index: the position in the matrix at which the row resides
+						:type index: int
+
+						:return: returns the first node in the row.
+						:rtype: node
+		"""
 		self.remove_row_overlap(index)
 
 		current_node = self.first_header
@@ -181,6 +189,12 @@ class Matrix:
 		return first_node
 
 	def remove_row_overlap(self, index):
+		"""if you are removing a row that overlaps a column it will remove that node
+			that had already been removed along with the other nodes in the row.
+
+						:param index:the position in the matrix at which the row resides
+						:type index:int
+					"""
 		for i in range(0, len(self.removed_nodes[index])):
 			current_node = self.removed_nodes[index][i]
 			if current_node is not None:
@@ -188,6 +202,10 @@ class Matrix:
 				current_node.down.up = current_node.up
 
 	def restore_row(self, first_node):
+		"""restores a that has been removed by taking its
+								:param first_node:the first node in the row that was deleted.
+								:type first_node:node
+							"""
 		current_node = first_node
 
 		first = True
@@ -216,6 +234,10 @@ class Matrix:
 		self.tally_all_values()
 
 	def restore_row_overlap(self, index):
+		"""restores a row and if a node has been removed as a result of a column removal it will restore that node as well
+								:param index:the position in the matrix at which the row resides
+								:type index:int
+							"""
 		for i in range(0, len(self.removed_nodes[index])):
 			current_node = self.removed_nodes[index][i]
 			if current_node is not None:
@@ -223,6 +245,10 @@ class Matrix:
 				current_node.down.up = current_node
 
 	def remove_column(self, index):
+		"""removes a column at a specified index.
+										:param index:the position in the matrix at which the row resides
+										:type index:int
+									"""
 		self.remove_column_overlap(index)
 
 		current_node = self.first_header
@@ -251,6 +277,12 @@ class Matrix:
 		return first_node
 
 	def remove_column_overlap(self, index):
+		"""removes a column and if a node has been removed as a result of a row removal it will remove that node as well as the
+		other nodes in that row.
+										:param index:the position in the matrix at which the row resides
+										:type index:int
+									"""
+
 		for i in range(0, len(self.removed_nodes)):
 			current_node = self.removed_nodes[i][index]
 			if current_node is not None:
@@ -258,6 +290,10 @@ class Matrix:
 				current_node.right.left = current_node.left
 
 	def restore_column(self, first_node):
+		"""restores a column
+										:param first_node:the node in the first position of the column that was deleted.
+										:type first_node:node
+									"""
 		current_node = first_node
 
 		if current_node.y < self.first_header.down.y:
@@ -290,6 +326,11 @@ class Matrix:
 		self.tally_all_values()
 
 	def restore_column_overlap(self, index):
+		"""restores a column and if a node has been added as a result of a row addition it will exclude that node rather than
+		add it twice
+										:param index:the position in the matrix at which the row resides
+										:type index:int
+									"""
 		for i in range(0, len(self.removed_nodes)):
 			current_node = self.removed_nodes[i][index]
 			if current_node is not None:
@@ -297,6 +338,8 @@ class Matrix:
 				current_node.right.left = current_node
 
 	def get_array_representation(self):
+		"""returns the array representation of the matrix by traversing the rows left to right and appending each
+		nodes value to an array."""
 		if self.zero_columns:
 			return []
 		array = []
