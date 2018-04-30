@@ -1,29 +1,29 @@
 import unittest
 import random
 
-class Node(object):
 
+class Node(object):
+	""" This node class is intended for a 2-D, circular, doubly liked list"""
 
 	def __init__(self, up, down, left, right, x, y, value=None):
 		""" Creates a node that stores values and pointers to nodes adjacent to the node.
 
-				:param up:the pointer to the node above the current node
-				:param down:the pointer to the node below the current node
-				:param right:the pointer to the node to the right of the current node
-				:param left:the pointer to the node to the left of the current node
-				:param x:the indexed row number starting from the top of the matrix down
-				:param y:the indexed column number starting from the left of the matrix down
-				:param value:a numerical value stored by the node
+		:param up:the pointer to the node above the current node
+		:param down:the pointer to the node below the current node
+		:param right:the pointer to the node to the right of the current node
+		:param left:the pointer to the node to the left of the current node
+		:param x:the indexed row number starting from the top of the matrix down
+		:param y:the indexed column number starting from the left of the matrix down
+		:param value:a numerical value stored by the node
 
-
-				:type up: node
-				:type down:node
-				:type left:node
-				:type right:node
-				:type x:int
-				:type y:int
-				:type value:int
-				"""
+		:type up: node
+		:type down: node
+		:type left: node
+		:type right: node
+		:type x: int
+		:type y: int
+		:type value: int
+		"""
 
 		self.up = up
 		self.down = down
@@ -46,23 +46,22 @@ class Node(object):
 
 class Header(Node):
 
-
 	def __init__(self, up, down, left, right, primary):
 		""" Creates a subclass of node that stores values and pointers to nodes adjacent to that node and keeps track of the sum of the values of the nodes of the column.
 
-					:param up:the pointer to the node above the current node
-					:param down:the pointer to the node below the current node
-					:param right:the pointer to the node to the right of the current node
-					:param left:the pointer to the node to the left of the current node
-					:param primary:a boolean marking the column as primary or not primary.
+		:param up:the pointer to the node above the current node
+		:param down:the pointer to the node below the current node
+		:param right:the pointer to the node to the right of the current node
+		:param left:the pointer to the node to the left of the current node
+		:param primary:a boolean marking the column as primary or not primary.
 
-					:type up:node
-					:type down:node
-					:type left:node (header)
-					:type right:node (header)
-					:type primary:boolean
+		:type up:node
+		:type down:node
+		:type left:node (header)
+		:type right:node (header)
+		:type primary:boolean
 
-					"""
+		"""
 		super(Header, self).__init__(up, down, left, right, None, None)
 
 		self.is_primary = primary
@@ -79,14 +78,13 @@ class Header(Node):
 
 class Matrix:
 
-
 	def __init__(self, values):
 		""" Creates a matrix with headers for each column and nodes for each entry in the matrix.
 
-						:param values:a two dimensional array where each element of the array is the value of the node at that position in the matrix
-						:type values: array
+		:param values: a two dimensional array where each element of the array is the value of the node at that position in the matrix
+		:type values: collections.iterable
 
-						"""
+		"""
 
 		self.removed_nodes = []
 		self.first_header = None
@@ -98,10 +96,11 @@ class Matrix:
 
 	def add_row(self, values):
 		""" adds a row to the matrix and if no rows have been created it creates headers for the matrix .
-		:param values: an array containing the values for the nodes that are being created
-		:type values: array
-		"""
 
+		:param values: an array containing the values for the nodes that are being created
+		:type values: collections.iterable
+
+		"""
 
 		if self.first_header is None:
 			self.first_header = Header(None, None, None, None, False)
@@ -139,6 +138,7 @@ class Matrix:
 
 	def get_number_of_headers(self):
 		""" returns total number if headers.
+
 		:return: the number of headers in the matrix.
 		:rtype: int
 		"""
@@ -498,17 +498,17 @@ class UnitTest(unittest.TestCase):
 		self.assertEqual(node8.value, matrix.first_header.down.down.down.right.value)
 		self.assertEqual(node9.value, matrix.first_header.down.down.down.left.value)
 
-	def test_add_large_number_rows(self):
-		matrix = Matrix([])
-		numberOfRows = 500;
-		numberOfColumns = 500;
-
-		for x in range(0,numberOfRows):
-			row = []
-			for x in range(0, numberOfColumns):
-				row.append(random.randint(0,100))
-			matrix.add_row(row)
-		self.assertEqual(matrix.total_rows, numberOfRows)
+	# def test_add_large_number_rows(self):
+	# 	matrix = Matrix([])
+	# 	numberOfRows = 500;
+	# 	numberOfColumns = 500;
+	#
+	# 	for x in range(0,numberOfRows):
+	# 		row = []
+	# 		for x in range(0, numberOfColumns):
+	# 			row.append(random.randint(0,100))
+	# 		matrix.add_row(row)
+	# 	self.assertEqual(matrix.total_rows, numberOfRows)
 
 
 	def test_get_array_representation(self):
@@ -750,10 +750,9 @@ class UnitTest(unittest.TestCase):
 		self.assertEqual(matrix.get_array_representation(), [[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
 
-
-
 def main():
 	unittest.main()
+
 
 if __name__ == '__main__':
 	main()
